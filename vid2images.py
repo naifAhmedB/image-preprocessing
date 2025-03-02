@@ -56,6 +56,13 @@ def select_video():
     if video_path:
         video_path_var.set(video_path)
 
+        # Get FPS and update label
+        cap = cv2.VideoCapture(video_path)
+        fps = int(cap.get(cv2.CAP_PROP_FPS))
+        cap.release()
+        
+        fps_label.config(text=f"Frames per second (FPS): {fps}")
+
 def start_process():
     video_path = video_path_var.get()
     save_frame = int(frame_interval_var.get())
@@ -79,7 +86,7 @@ def start_process():
 # Create main window
 root = tk.Tk()
 root.title("Video Frame Extractor")
-root.geometry("400x350")
+root.geometry("400x400")
 
 video_path_var = tk.StringVar()
 frame_interval_var = tk.StringVar(value="30")
@@ -95,6 +102,10 @@ video_button.pack()
 
 video_entry = tk.Entry(root, textvariable=video_path_var, width=50)
 video_entry.pack()
+
+# FPS Display Label
+fps_label = tk.Label(root, text="Frames per second (FPS): -", font=("Arial", 10, "bold"))
+fps_label.pack(pady=5)
 
 # Frame Interval Dropdown
 frame_label = tk.Label(root, text="Select Frame Interval (1-50):")
