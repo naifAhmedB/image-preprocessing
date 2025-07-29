@@ -21,41 +21,82 @@ def split_dataset(images_folder, labels_folder, output_folder, train_ratio):
     os.makedirs(os.path.join(output_labels_folder, "train"), exist_ok=True)
     os.makedirs(os.path.join(output_labels_folder, "val"), exist_ok=True)
 
-    # Get all image files (assuming .png files; update extension if needed)
-    image_files = [f for f in os.listdir(images_folder) if f.lower().endswith(".png")]
+
+
+    # Get all image files (supporting multiple formats)
+    image_extensions = (".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff")
+    image_files = [f for f in os.listdir(images_folder) if f.lower().endswith(image_extensions)]
     if not image_files:
         messagebox.showerror("Error", "No image files found in the images folder!")
         return
     random.shuffle(image_files)
-    
+
     # Calculate the number of training images
     train_size = int(len(image_files) * train_ratio)
     train_images = image_files[:train_size]
     val_images = image_files[train_size:]
-    
+
     # Move training images and corresponding labels
     for img in train_images:
         src_img = os.path.join(images_folder, img)
         dest_img = os.path.join(output_images_folder, "train", img)
         shutil.move(src_img, dest_img)
-        
-        label_filename = img.replace(".png", ".txt")
+
+        # Replace image extension with .txt for label filename
+        label_filename = os.path.splitext(img)[0] + ".txt"
         src_label = os.path.join(labels_folder, label_filename)
         if os.path.exists(src_label):
             dest_label = os.path.join(output_labels_folder, "train", label_filename)
             shutil.move(src_label, dest_label)
-    
+
     # Move validation images and corresponding labels
     for img in val_images:
         src_img = os.path.join(images_folder, img)
         dest_img = os.path.join(output_images_folder, "val", img)
         shutil.move(src_img, dest_img)
-        
-        label_filename = img.replace(".png", ".txt")
+
+        label_filename = os.path.splitext(img)[0] + ".txt"
         src_label = os.path.join(labels_folder, label_filename)
         if os.path.exists(src_label):
             dest_label = os.path.join(output_labels_folder, "val", label_filename)
             shutil.move(src_label, dest_label)
+
+
+    # # Get all image files (assuming .png files; update extension if needed)
+    # image_files = [f for f in os.listdir(images_folder) if f.lower().endswith(".png")]
+    # if not image_files:
+    #     messagebox.showerror("Error", "No image files found in the images folder!")
+    #     return
+    # random.shuffle(image_files)
+    
+    # # Calculate the number of training images
+    # train_size = int(len(image_files) * train_ratio)
+    # train_images = image_files[:train_size]
+    # val_images = image_files[train_size:]
+    
+    # # Move training images and corresponding labels
+    # for img in train_images:
+    #     src_img = os.path.join(images_folder, img)
+    #     dest_img = os.path.join(output_images_folder, "train", img)
+    #     shutil.move(src_img, dest_img)
+        
+    #     label_filename = img.replace(".png", ".txt")
+    #     src_label = os.path.join(labels_folder, label_filename)
+    #     if os.path.exists(src_label):
+    #         dest_label = os.path.join(output_labels_folder, "train", label_filename)
+    #         shutil.move(src_label, dest_label)
+    
+    # # Move validation images and corresponding labels
+    # for img in val_images:
+    #     src_img = os.path.join(images_folder, img)
+    #     dest_img = os.path.join(output_images_folder, "val", img)
+    #     shutil.move(src_img, dest_img)
+        
+    #     label_filename = img.replace(".png", ".txt")
+    #     src_label = os.path.join(labels_folder, label_filename)
+    #     if os.path.exists(src_label):
+    #         dest_label = os.path.join(output_labels_folder, "val", label_filename)
+    #         shutil.move(src_label, dest_label)
     
     messagebox.showinfo("Success", "Dataset split completed!")
 

@@ -2,5 +2,4 @@ vid2img
 - allow user to select image format ('.png', '.jpg', '.jpeg')
 
 splitDataset
-- support all image format ('.png', '.jpg', '.jpeg')
 - make split for test data as optional
